@@ -8,7 +8,6 @@ class Veterinarian {
     public String getSpecialty(){ return specialty; } public void setSpecialty(String specialty){ this.specialty=specialty; }
     public String getPhone(){ return phone; } public void setPhone(String phone){ this.phone=phone; }
     public String getLicense(){ return license; } public void setLicense(String license){ this.license=license; }
-    public boolean hasLicense(){
-        return license != null && !license.isEmpty();
+    public boolean hasLicense(){ return license != null && !license.isEmpty();
     }
 }

@@ -8,7 +8,6 @@ class Vaccination {
     public String getVaccineName(){ return vaccineName; } public void setVaccineName(String vaccineName){ this.vaccineName=vaccineName; }
     public String getDateGiven(){ return dateGiven; } public void setDateGiven(String dateGiven){ this.dateGiven=dateGiven; }
     public String getValidUntil(){ return validUntil; } public void setValidUntil(String validUntil){ this.validUntil=validUntil; }
-    public boolean isVaccinated(){
-        return Vaccination.getVaccineName().isEmpty();
+    public boolean isVaccinated(){ return Vaccination.getVaccineName().isEmpty();
     }
 }

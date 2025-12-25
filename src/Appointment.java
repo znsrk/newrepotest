@@ -8,5 +8,5 @@ class Appointment {
     public String getOwnerId(){ return ownerId; } public void setOwnerId(String ownerId){ this.ownerId=ownerId; }
     public String getVetId(){ return vetId; } public void setVetId(String vetId){ this.vetId=vetId; }
     public String getDateTime(){ return dateTime; } public void setDateTime(String dateTime){ this.dateTime=dateTime; }
-
+    public boolean isAvailable(){ return dateTime.isEmpty();}
 }
