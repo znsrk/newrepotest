@@ -1,3 +1,4 @@
+package src;
 public class Owner {
     private String id;
     private String fullName;

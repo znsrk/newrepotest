@@ -1,3 +1,4 @@
+package src;
 public class Vaccination {
     private String id;
     private String petId;

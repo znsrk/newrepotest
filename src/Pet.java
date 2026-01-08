@@ -1,3 +1,4 @@
+package src;
 public class Pet {
     private String id;
     private String name;

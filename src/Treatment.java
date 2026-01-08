@@ -1,3 +1,4 @@
+package src;
 public class Treatment {
     private String id;
     private String appointmentId;
