@@ -1,10 +1,13 @@
 package src;
+
 public class Pet {
+
     private String id;
     private String name;
     private String species;
     private String color;
     private String dob;
+
     public Pet(String id, String name, String species, String color, String dob) {
         setId(id);
         setName(name);
@@ -12,9 +15,11 @@ public class Pet {
         setColor(color);
         setDob(dob);
     }
+
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         if (id != null && !id.trim().isEmpty()) {
             this.id = id;
@@ -23,9 +28,11 @@ public class Pet {
             this.id = "UNKNOWN";
         }
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         if (name != null && !name.trim().isEmpty()) {
             this.name = name;
@@ -34,9 +41,11 @@ public class Pet {
             this.name = "Unknown Pet";
         }
     }
+
     public String getSpecies() {
         return species;
     }
+
     public void setSpecies(String species) {
         if (species != null && !species.trim().isEmpty()) {
             this.species = species;
@@ -45,9 +54,11 @@ public class Pet {
             this.species = "Unknown";
         }
     }
+
     public String getColor() {
         return color;
     }
+
     public void setColor(String color) {
         if (color != null && !color.trim().isEmpty()) {
             this.color = color;
@@ -56,9 +67,11 @@ public class Pet {
             this.color = "Unknown";
         }
     }
+
     public String getDob() {
         return dob;
     }
+
     public void setDob(String dob) {
         if (dob != null && !dob.trim().isEmpty()) {
             this.dob = dob;
@@ -67,6 +80,7 @@ public class Pet {
             this.dob = "0000-00-00";
         }
     }
+
     @Override
     public String toString() {
         return "Pet{id='" + id + '\'' +
@@ -77,4 +91,37 @@ public class Pet {
                 '}';
     }
 }
+class Dog extends Pet {
+
+    private String breed;
+
+    public Dog(String id, String name, String color, String dob, String breed) {
+        super(id, name, "Dog", color, dob);
+        this.breed = breed;
+    }
+
+    public String getBreed() {
+        return breed;
+    }
+
+    public void setBreed(String breed) {
+        this.breed = breed;
+    }
+
+    public void bark() {
+        System.out.println(getName() + " says: Woof!");
+    }
+
+    @Override
+    public String toString() {
+        return "Dog{id='" + getId() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", species='" + getSpecies() + '\'' +
+                ", color='" + getColor() + '\'' +
+                ", dob='" + getDob() + '\'' +
+                ", breed='" + breed + '\'' +
+                '}';
+    }
+}
+
 

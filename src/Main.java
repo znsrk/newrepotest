@@ -5,23 +5,34 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
 
-        // Lists to store many objects
-        List<Pet> pets = new ArrayList<>();
-        List<Owner> owners = new ArrayList<>();
-        List<Veterinarian> vets = new ArrayList<>();
-        List<Appointment> appointments = new ArrayList<>();
-        List<Treatment> treatments = new ArrayList<>();
-        List<Vaccination> vaccinations = new ArrayList<>();
 
-        // Optional: one initial sample object (like you had)
+        List<Pet> pets = new ArrayList<>();
+        List owners = new ArrayList<>();
+        List vets = new ArrayList<>();
+        List appointments = new ArrayList<>();
+        List treatments = new ArrayList<>();
+        List vaccinations = new ArrayList<>();
+
+
         pets.add(new Pet("P1", "Barsik", "Cat", "White", "2021-03-10"));
+        pets.add(new Dog("D1", "Rex", "Brown", "2020-01-15", "Shepherd"));
+
         owners.add(new Owner("O1", "Zhanserik", "7777", "Astana", "aa@example.com"));
         vets.add(new Veterinarian("V1", "Dr. Kim", "Therapy", "7701", "LIC1"));
 
+        Pet petRef = pets.get(1);              // upcast: Dog -> Pet (implicit)
+        if (petRef instanceof Dog) {
+            Dog dogRef = (Dog) petRef;         // downcast: Pet -> Dog (explicit)
+            dogRef.bark();                     // subclass-only method
+        }
+
         boolean running = true;
+
         while (running) {
             System.out.println();
             System.out.println("VET CLINIC SYSTEM");
@@ -77,19 +88,28 @@ public class Main {
         String id = scanner.nextLine();
         System.out.print("Enter pet name: ");
         String name = scanner.nextLine();
-        System.out.print("Enter species: ");
+        System.out.print("Enter species (Cat/Dog/etc): ");
         String species = scanner.nextLine();
         System.out.print("Enter color: ");
         String color = scanner.nextLine();
         System.out.print("Enter date of birth (YYYY-MM-DD): ");
         String dob = scanner.nextLine();
 
-        Pet pet = new Pet(id, name, species, color, dob);
+        Pet pet;
+
+        if ("Dog".equalsIgnoreCase(species)) {
+            System.out.print("Enter dog breed: ");
+            String breed = scanner.nextLine();
+            pet = new Dog(id, name, color, dob, breed);
+        } else {
+            pet = new Pet(id, name, species, color, dob);
+        }
+
         pets.add(pet);
         System.out.println("Pet added: " + pet);
     }
 
-    private static void addOwner(Scanner scanner, List<Owner> owners) {
+    private static void addOwner(Scanner scanner, List owners) {
         System.out.println("--- ADD OWNER ---");
         System.out.print("Enter owner id: ");
         String id = scanner.nextLine();
@@ -118,16 +138,14 @@ public class Main {
         }
     }
 
-    private static void viewOwners(List<Owner> owners) {
+    private static void viewOwners(List owners) {
         System.out.println("--- OWNERS ---");
         if (owners.isEmpty()) {
             System.out.println("No owners.");
             return;
         }
-        for (Owner o : owners) {
+        for (Object o : owners) {
             System.out.println(o);
         }
     }
 }
-
-
