@@ -1,0 +1,29 @@
+package source;
+
+
+public class Pet extends Owner {
+    private int visitsCount; // Replaces tablesServed
+    public Pet(int id, String name, double balance, int yearsRegistered, int visitsCount) {
+        super(id, name, balance, yearsRegistered);
+        this.visitsCount = visitsCount;
+    }
+    public int getVisitsCount() {
+        return visitsCount;
+    }
+    @Override
+    public void performActivity() {
+        System.out.println("Pet " + name + " is waiting for the doctor.");
+    }
+    @Override
+    public String getType() {
+        return "Pet";
+    }
+    public boolean isVIP() {
+        return visitsCount > 50 && yearsRegistered >= 2;
+    }
+    @Override
+    public String toString() {
+        return super.toString() + " | Visits: " + visitsCount;
+    }
+}
+
