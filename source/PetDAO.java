@@ -1,7 +1,4 @@
-package dao;
-
-import db.DatabaseConnection;
-import source.Pet;
+package source;
 
 import java.sql.*;
 import java.util.ArrayList;

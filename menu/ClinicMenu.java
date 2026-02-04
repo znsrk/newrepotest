@@ -1,27 +1,22 @@
 package menu;
-import java.util.ArrayList;
+
+import source.PetDAO;
+import source.VeterinarianDAO;
+import source.DatabaseConnection;
+import source.*;
+
+import java.util.List;
 import java.util.Scanner;
-public class ClinicMenu implements Menu{
-    private ArrayList<Owner> allEntities;
-    private ArrayList<Appointment> allServices;
+
+public class ClinicMenu implements Menu {
+    private VeterinarianDAO vetDAO;
+    private PetDAO petDAO;
     private Scanner scanner;
 
     public ClinicMenu() {
-        this.allEntities = new ArrayList<>();
-        this.allServices = new ArrayList<>();
+        this.vetDAO = new VeterinarianDAO();
+        this.petDAO = new PetDAO();
         this.scanner = new Scanner(System.in);
-
-        // test data
-        try {
-            allEntities.add(new Veterinarian(101, "Dr. Smith", 500000, 15, "Surgery"));
-            allEntities.add(new Pet(201, "Rex", 0, 3, 12));
-
-            allServices.add(new Appointment("Rabies Shot", 5000, "Vaccine"));
-            allServices.add(new Appointment("General Checkup", 3000, "Consultation"));
-            allServices.add(new Appointment("Grooming", 7000, "Hygiene"));
-        } catch (Exception e) {
-            System.out.println("Error initializing data.");
-        }
     }
 
     @Override
@@ -29,142 +24,352 @@ public class ClinicMenu implements Menu{
         System.out.println("\n========================================");
         System.out.println("    VET CLINIC MANAGEMENT SYSTEM");
         System.out.println("========================================");
-        System.out.println("1. Add Veterinarian");
-        System.out.println("2. Add Pet");
-        System.out.println("3. View All Entities");
-        System.out.println("4. View Veterinarians Only");
-        System.out.println("5. View Pets Only");
-        System.out.println("6. Clinic Activity (Polymorphism)");
-        System.out.println("7. Add Service/Appointment");
-        System.out.println("8. View All Services");
-        System.out.println("9. Perform Vaccination/Service");
-        System.out.println("0. Exit");
+        System.out.println("1.  Add Veterinarian");
+        System.out.println("2.  Add Pet");
+        System.out.println("3.  View All Veterinarians");
+        System.out.println("4.  View All Pets");
+        System.out.println("5.  Update Veterinarian");
+        System.out.println("6.  Update Pet");
+        System.out.println("7.  Delete Veterinarian");
+        System.out.println("8.  Delete Pet");
+        System.out.println("9.  Search Veterinarian by Name");
+        System.out.println("10. Search Pet by Name");
+        System.out.println("11. Search Vet by Experience");
+        System.out.println("12. Search Pet by Visits");
+        System.out.println("13. Clinic Activity (Polymorphism)");
+        System.out.println("0.  Exit");
         System.out.println("========================================");
     }
 
     @Override
-    public void run(){
+    public void run() {
         boolean running = true;
-        while (running){
+        while (running) {
             displayMenu();
-            System.out.println("Choice");
+            System.out.print("Choice: ");
 
             try {
                 int choice = scanner.nextInt();
                 scanner.nextLine();
 
-                switch (choice){
+                switch (choice) {
                     case 1: addVeterinarian(); break;
                     case 2: addPet(); break;
-                    case 3: viewAllEntities(); break;
-                    case 4: viewVeterinarians(); break;
-                    case 5: viewPets(); break;
-                    case 6: demonstratePolymorphism(); break;
-                    case 7: addService(); break;
-                    case 8: viewAllServices(); break;
-                    case 9: performService(); break;
+                    case 3: viewAllVeterinarians(); break;
+                    case 4: viewAllPets(); break;
+                    case 5: updateVeterinarian(); break;
+                    case 6: updatePet(); break;
+                    case 7: deleteVeterinarian(); break;
+                    case 8: deletePet(); break;
+                    case 9: searchVetByName(); break;
+                    case 10: searchPetByName(); break;
+                    case 11: searchVetByExperience(); break;
+                    case 12: searchPetByVisits(); break;
+                    case 13: demonstratePolymorphism(); break;
                     case 0:
                         running = false;
-                        System.out.println("Bye");
+                        DatabaseConnection.closeConnection();
+                        System.out.println("Goodbye!");
                         break;
-                    default: System.out.println("Wrong choice");
+                    default: System.out.println("Invalid choice!");
                 }
-            }catch (Exception exc){
+            } catch (Exception e) {
                 System.out.println("Error: Invalid input.");
                 scanner.nextLine();
             }
         }
     }
-    private void addVeterinarian(){
-        System.out.println("ID: "); int id = scanner.nextInt(); scanner.nextLine();
-        System.out.println("Name: "); String name = scanner.nextLine();
-        System.out.println("Salary: "); int salary = scanner.nextInt(); scanner.nextLine();
-        System.out.println("Experience (Years): "); int experience = scanner.nextInt(); scanner.nextLine();
-        System.out.println("Specialization: "); String specialization = scanner.nextLine();
 
-        allEntities.add(new Veterinarian(id, name, salary, experience, specialization));
-        System.out.println("Added");
-    }
-    private void addPet() {
-        System.out.println("\n Add Pet ");
+    private void addVeterinarian() {
+        System.out.println("\n--- Add Veterinarian ---");
         try {
-            System.out.print("ID: "); int id = scanner.nextInt(); scanner.nextLine();
-            System.out.print("Name: "); String name = scanner.nextLine();
-            System.out.print("Balance/Credit: "); double bal = scanner.nextDouble(); scanner.nextLine();
-            System.out.print("Years Registered: "); int years = scanner.nextInt(); scanner.nextLine();
-            System.out.print("Total Visits: "); int visits = scanner.nextInt(); scanner.nextLine();
-
-            allEntities.add(new Pet(id, name, bal, years, visits));
-            System.out.println("Pet added!");
-        } catch (Exception e) {
-            System.out.println("Input Error.");
+            System.out.print("ID: ");
+            int id = scanner.nextInt();
             scanner.nextLine();
-        }
-    }
-
-    private void viewVeterinarians() {
-        System.out.println("\n--- Veterinarians ---");
-        for (Owner o : allEntities) {
-            if (o instanceof Veterinarian) System.out.println(o);
-        }
-    }
-
-    private void viewAllEntities(){
-        System.out.println("\nAll Vets");
-        for(Owner o : allEntities){
-            if(o instanceof Veterinarian) System.out.println(o);
-        }
-
-    }
-    private void viewPets(){
-        for (Owner o : allEntities){
-            if(o instanceof Pet) System.out.println(o);
-        }
-    }
-    private void demonstratePolymorphism(){
-        System.out.println("Clinic activity");
-        for (Owner o : allEntities){
-            o.performActivity();
-        }
-    }
-    private void addService(){
-
-        try{
-            System.out.println();
+            System.out.print("Name: ");
             String name = scanner.nextLine();
-            double price = scanner.nextInt(); scanner.nextLine();
-            String cat = scanner.nextLine();
-            allServices.add(new Appointment(name, price, cat));
+            System.out.print("Salary: ");
+            double salary = scanner.nextDouble();
+            scanner.nextLine();
+            System.out.print("Years of Experience: ");
+            int experience = scanner.nextInt();
+            scanner.nextLine();
+            System.out.print("Specialization: ");
+            String spec = scanner.nextLine();
 
-        }   catch (Exception e){
-            System.out.println("Error");
+            Veterinarian vet = new Veterinarian(id, name, salary, experience, spec);
+            vetDAO.insert(vet);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Input Error: " + e.getMessage());
             scanner.nextLine();
         }
     }
-    private void viewAllServices() {
-        System.out.println("\n--- Available Services ---");
-        for (int i = 1; i < allServices.size() + 1; i++) {
-            System.out.println(allServices.get(i));
+
+    private void addPet() {
+        System.out.println("\n--- Add Pet ---");
+        try {
+            System.out.print("ID: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+            System.out.print("Name: ");
+            String name = scanner.nextLine();
+            System.out.print("Balance: ");
+            double balance = scanner.nextDouble();
+            scanner.nextLine();
+            System.out.print("Years Registered: ");
+            int years = scanner.nextInt();
+            scanner.nextLine();
+            System.out.print("Total Visits: ");
+            int visits = scanner.nextInt();
+            scanner.nextLine();
+
+            Pet pet = new Pet(id, name, balance, years, visits);
+            petDAO.insert(pet);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Input Error: " + e.getMessage());
+            scanner.nextLine();
         }
     }
-    private void performService() {
-        System.out.println("\n--- Perform Service ---");
-        if (allServices.isEmpty()) {
-            System.out.println("No services available.");
-            return;
+
+    private void viewAllVeterinarians() {
+        System.out.println("\n--- All Veterinarians ---");
+        List<Veterinarian> vets = vetDAO.getAll();
+        if (vets.isEmpty()) {
+            System.out.println("No veterinarians found.");
+        } else {
+            for (Veterinarian vet : vets) {
+                System.out.println(vet);
+            }
         }
-        viewAllServices();
-        System.out.print("Select service number: ");
+    }
+
+    private void viewAllPets() {
+        System.out.println("\n--- All Pets ---");
+        List<Pet> pets = petDAO.getAll();
+        if (pets.isEmpty()) {
+            System.out.println("No pets found.");
+        } else {
+            for (Pet pet : pets) {
+                System.out.println(pet);
+            }
+        }
+    }
+
+    private void updateVeterinarian() {
+        System.out.println("\n--- Update Veterinarian ---");
         try {
-            int choice = scanner.nextInt();
-            if (choice > 0 && choice <= allServices.size()) {
-                allServices.get(choice - 1).performVaccination();
+            System.out.print("Enter Veterinarian ID to update: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+
+            Veterinarian vet = vetDAO.getById(id);
+            if (vet == null) {
+                System.out.println("Veterinarian not found!");
+                return;
+            }
+
+            System.out.println("Current: " + vet);
+            System.out.print("New Name (or press Enter to keep): ");
+            String name = scanner.nextLine();
+            if (!name.isEmpty()) vet.setName(name);
+
+            System.out.print("New Salary (or 0 to keep): ");
+            double salary = scanner.nextDouble();
+            scanner.nextLine();
+            if (salary > 0) vet.setBalance(salary);
+
+            System.out.print("New Specialization (or press Enter to keep): ");
+            String spec = scanner.nextLine();
+            if (!spec.isEmpty()) vet.setSpecialization(spec);
+
+            vetDAO.update(vet);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            scanner.nextLine();
+        }
+    }
+
+    private void updatePet() {
+        System.out.println("\n--- Update Pet ---");
+        try {
+            System.out.print("Enter Pet ID to update: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+
+            Pet pet = petDAO.getById(id);
+            if (pet == null) {
+                System.out.println("Pet not found!");
+                return;
+            }
+
+            System.out.println("Current: " + pet);
+            System.out.print("New Name (or press Enter to keep): ");
+            String name = scanner.nextLine();
+            if (!name.isEmpty()) pet.setName(name);
+
+            System.out.print("New Balance (or -1 to keep): ");
+            double balance = scanner.nextDouble();
+            scanner.nextLine();
+            if (balance >= 0) pet.setBalance(balance);
+
+            System.out.print("New Visits Count (or -1 to keep): ");
+            int visits = scanner.nextInt();
+            scanner.nextLine();
+            if (visits >= 0) pet.setVisitsCount(visits);
+
+            petDAO.update(pet);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Validation Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            scanner.nextLine();
+        }
+    }
+
+    private void deleteVeterinarian() {
+        System.out.println("\n--- Delete Veterinarian ---");
+        try {
+            System.out.print("Enter Veterinarian ID to delete: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+
+            Veterinarian vet = vetDAO.getById(id);
+            if (vet == null) {
+                System.out.println("Veterinarian not found!");
+                return;
+            }
+
+            System.out.println("Found: " + vet);
+            System.out.print("Are you sure you want to delete? (yes/no): ");
+            String confirm = scanner.nextLine();
+
+            if (confirm.equalsIgnoreCase("yes")) {
+                vetDAO.delete(id);
             } else {
-                System.out.println("Invalid number.");
+                System.out.println("Deletion cancelled.");
             }
         } catch (Exception e) {
-            System.out.println("Error.");
+            System.out.println("Error: " + e.getMessage());
             scanner.nextLine();
+        }
+    }
+
+    private void deletePet() {
+        System.out.println("\n--- Delete Pet ---");
+        try {
+            System.out.print("Enter Pet ID to delete: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+
+            Pet pet = petDAO.getById(id);
+            if (pet == null) {
+                System.out.println("Pet not found!");
+                return;
+            }
+
+            System.out.println("Found: " + pet);
+            System.out.print("Are you sure you want to delete? (yes/no): ");
+            String confirm = scanner.nextLine();
+
+            if (confirm.equalsIgnoreCase("yes")) {
+                petDAO.delete(id);
+            } else {
+                System.out.println("Deletion cancelled.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            scanner.nextLine();
+        }
+    }
+
+    private void searchVetByName() {
+        System.out.println("\n--- Search Veterinarian by Name ---");
+        System.out.print("Enter name to search: ");
+        String name = scanner.nextLine();
+
+        List<Veterinarian> results = vetDAO.searchByName(name);
+        if (results.isEmpty()) {
+            System.out.println("No veterinarians found matching '" + name + "'");
+        } else {
+            System.out.println("Found " + results.size() + " result(s):");
+            for (Veterinarian vet : results) {
+                System.out.println(vet);
+            }
+        }
+    }
+
+    private void searchPetByName() {
+        System.out.println("\n--- Search Pet by Name ---");
+        System.out.print("Enter name to search: ");
+        String name = scanner.nextLine();
+
+        List<Pet> results = petDAO.searchByName(name);
+        if (results.isEmpty()) {
+            System.out.println("No pets found matching '" + name + "'");
+        } else {
+            System.out.println("Found " + results.size() + " result(s):");
+            for (Pet pet : results) {
+                System.out.println(pet);
+            }
+        }
+    }
+
+    private void searchVetByExperience() {
+        System.out.println("\n--- Search Veterinarian by Experience ---");
+        System.out.print("Minimum years of experience: ");
+        int years = scanner.nextInt();
+        scanner.nextLine();
+
+        List<Veterinarian> results = vetDAO.searchByExperience(years);
+        if (results.isEmpty()) {
+            System.out.println("No veterinarians found with " + years + "+ years experience.");
+        } else {
+            System.out.println("Found " + results.size() + " result(s):");
+            for (Veterinarian vet : results) {
+                System.out.println(vet);
+            }
+        }
+    }
+
+    private void searchPetByVisits() {
+        System.out.println("\n--- Search Pet by Visits ---");
+        System.out.print("Minimum number of visits: ");
+        int visits = scanner.nextInt();
+        scanner.nextLine();
+
+        List<Pet> results = petDAO.searchByVisits(visits);
+        if (results.isEmpty()) {
+            System.out.println("No pets found with " + visits + "+ visits.");
+        } else {
+            System.out.println("Found " + results.size() + " result(s):");
+            for (Pet pet : results) {
+                System.out.println(pet);
+            }
+        }
+    }
+
+    private void demonstratePolymorphism() {
+        System.out.println("\n--- Clinic Activity (Polymorphism Demo) ---");
+        
+        List<Veterinarian> vets = vetDAO.getAll();
+        List<Pet> pets = petDAO.getAll();
+
+        if (vets.isEmpty() && pets.isEmpty()) {
+            System.out.println("No entities in the database.");
+            return;
+        }
+
+        for (Veterinarian vet : vets) {
+            vet.performActivity();
+        }
+        for (Pet pet : pets) {
+            pet.performActivity();
         }
     }
 }
