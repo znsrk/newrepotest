@@ -6,11 +6,20 @@ public class Veterinarian extends Owner {
 
     public Veterinarian(int id, String name, double salary, int yearsExperience, String specialization) {
         super(id, name, salary, yearsExperience);
-        this.specialization = specialization;
+        setSpecialization(specialization);
     }
+    
     public String getSpecialization() {
         return specialization;
     }
+    
+    public void setSpecialization(String specialization) {
+        if (specialization == null || specialization.trim().isEmpty()) {
+            throw new IllegalArgumentException("Specialization cannot be empty!");
+        }
+        this.specialization = specialization;
+    }
+    
     @Override
     public void performActivity() {
         System.out.println("Dr. " + name + " is treating patients in " + specialization + ".");
